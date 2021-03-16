@@ -1,0 +1,33 @@
+# Configuration for activation-service application
+
+# Client configuration
+client:
+  # Client ID
+  id: "EU.EORI.NLPACKETDEL"
+  # Client key (PEM private key)
+  key: <pdc-private-key>
+  # Client certificate (PEM certificate chain)
+  crt: <pdc-certs>
+
+# Configuration of express web server
+express:
+  # Port (Internal port of the express web server)
+  port: 7000
+
+# Configuration of SQLite database
+db:
+  # Source (":memory:" or file e.g. "db.sqlite" for persistence)
+  source: ":memory:"
+
+# Configuration of authorisation registry
+ar:
+  # Endpoint for token request
+  token: "https://ar.packetdelivery.net/connect/token"
+  # Endpoint for create policy requests
+  policy: "https://ar.packetdelivery.net/policy"
+  # Endpoint for delegation requests
+  delegation: "https://ar.packetdelivery.net/delegation"
+  # EORI of AR
+  id: "EU.EORI.NLPACKETDEL"
+  # Disable SSL verification
+  rejectUnauthorized: false
