@@ -32,5 +32,32 @@ docker run --rm -it -p 7000:7000 -v <PATH_TO_FILE>/as.yml:/home/portal/config/as
 
 ### Kubernetes
 
-tbd
+A Helm chart is provided on [GitHub](https://github.com/i4Trust/helm-charts/tree/main/charts/activation-service) 
+and [Artifacthub](https://artifacthub.io/packages/helm/i4trust/activation-service).
 
+
+
+## Endpoints
+
+* `/health`: Get health output of web server
+* `/token`: Forwards a token request to the `/token` endpoint at the locally configured authorisation registry
+* `/createpolicy`: Activates the service by creating a policy at the locally configured authorisation registry
+
+
+## Extend
+
+This version just allows to create policies at the local authorisation registry when the `/createpolicy` endpoint 
+is called. 
+
+However, depending on the service provided, it might be needed that further steps are required when activating 
+a service, e.g. booting worker nodes or adding other resources. Such steps could be added as additional 
+modules in the `./activation/` folder and be integrated in the `/createpolicy` endpoint implementation 
+in `server.js`.
+
+
+## Debug
+
+Enable debugging by setting the environment variable:
+```shell
+DEBUG="as:*"
+```

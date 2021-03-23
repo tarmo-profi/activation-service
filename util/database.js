@@ -1,6 +1,7 @@
+var debug = require('debug')('as:database');
 var sqlite3 = require('sqlite3').verbose();
 const { open } = require('sqlite');
-const config = require('./config.js');
+const config = require('../config.js');
 
 const DBSOURCE = config.db_source;
 
@@ -36,6 +37,7 @@ async function insertToken(token, db) {
     var sql = 'INSERT OR REPLACE INTO token (eori, access_token, expires) VALUES (?,?,?)';
     var params = [ token.eori, token.access_token, token.expires];
     try {
+	debug('Inserting new token for %o', token.eori);
 	const result = await db.run(sql, params);
 	return null;
     } catch (err) {
@@ -57,6 +59,7 @@ async function getByEORI(eori, db) {
     }
     var sql = 'SELECT eori, access_token, expires FROM token WHERE eori = ?';
     try {
+	debug('Getting token DB entry by EORI: %o', eori);
 	const res = await db.get(sql, eori);
 	result.token = res;
     } catch (err) {
@@ -77,6 +80,7 @@ async function getByToken(token, db) {
     }
     var sql = 'SELECT eori, access_token, expires FROM token WHERE access_token = ?';
     try {
+	debug('Getting token DB entry by token');
 	const res = await db.get(sql, token);
 	result.token = res;
     } catch (err) {
@@ -90,6 +94,7 @@ async function clean(db) {
     try {
 	const result = await db.run('DELETE FROM token WHERE expires < ?',
 				    cur_date);
+	debug('Removed expired tokens from DB: %o', result);
 	return null;
     } catch (err) {
 	console.error("err:",err);

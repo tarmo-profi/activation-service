@@ -1,3 +1,4 @@
+var debug = require('debug')('as:config');
 const fs = require('fs');
 const yaml = require('js-yaml');
 
@@ -8,7 +9,7 @@ try {
     let fileContents = fs.readFileSync(config_file, 'utf8');
     user_cfg = yaml.load(fileContents);
 } catch (e) {
-    console.error("Error loading as.yml: ", e);
+    console.error("Error loading config/as.yml: ", e);
     process.exit(1)
 }
 
@@ -61,5 +62,8 @@ if (user_cfg.ar) {
 	config.ar_ssl = user_cfg.ar.rejectUnauthorized;
     }
 }
+
+// Debug output of config
+debug('Loaded config: %O', config);
 
 module.exports = config;
