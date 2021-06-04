@@ -231,6 +231,7 @@ async function createPolicy(token, payload) {
 	if (e.response) {
 	    msg = msg += ": " + e.response.text();
 	}
+	debug(msg);
 	result.err = msg;
 	return result;
     } 
@@ -260,6 +261,7 @@ async function performCreatePolicy(req, res, db, chain) {
 	if (db_token.err) {
 	    msg += ": " + db_token.err;
 	}
+	debug(msg);
 	error(400, msg, res);
 	return null;
     }
@@ -271,6 +273,7 @@ async function performCreatePolicy(req, res, db, chain) {
     const err = await checkCreateDelegationEvidence(db_token.token.eori, access_token);
     if (err) {
 	let msg = db_token.token.eori + " was not issued required policy: " + err;
+	debug(msg);
 	error(400, msg, res);
 	return null;
     }
@@ -279,6 +282,7 @@ async function performCreatePolicy(req, res, db, chain) {
     const presult = await createPolicy(access_token, req.body);
     if (presult.err) {
 	let msg = "Creating policy failed: " + presult.err;
+	debug(msg);
 	error(400, msg, res);
 	return null;
     }
