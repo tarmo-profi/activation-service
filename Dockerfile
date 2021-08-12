@@ -12,5 +12,5 @@ WORKDIR /home/aservice
 RUN npm install
 
 # Start
-EXPOSE 7000
+EXPOSE 7001
 CMD [ "npm", "start" ]
