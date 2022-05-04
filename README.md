@@ -6,6 +6,12 @@ Service allowing to activate services and create policies in an iSHARE authorisa
 Configuration is done in the file `config/as.yml`. You need to modify the values according to your 
 environment and add your private key and certificate chain.
 
+Private key and certificate chain can be also provided as ENVs as given below. In this case, the values from 
+`config/as.yml` would be overwritten.
+* Private key: `AS_CLIENT_KEY`
+* Certificate chain: `AS_CLIENT_CRT`
+
+
 ## Usage
 
 ### Local
