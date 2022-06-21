@@ -33,7 +33,7 @@ docker build -t activation-service:my-tag .
 Make a copy of the configuration file `config/as.yml` and modify according to your environment. 
 Then run the image:
 ```shell
-docker run --rm -it -p 7000:7000 -v <PATH_TO_FILE>/as.yml:/home/portal/config/as.yml activation-service:my-tag
+docker run --rm -it -p 7000:7000 -v <PATH_TO_FILE>/as.yml:/home/aservice/config/as.yml activation-service:my-tag
 ```
 
 ### Kubernetes
