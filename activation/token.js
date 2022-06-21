@@ -28,7 +28,9 @@ async function forward_token(req, res) {
             method: 'POST',
             body: tparams,
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-	    agent: httpsAgent
+	}
+	if(config.ar_token.toLowerCase().startsWith("https://")) {
+		options.agent = httpsAgent;
 	}
 	const ar_response = await fetch(config.ar_token, options);
 	const res_body = await ar_response.json();
