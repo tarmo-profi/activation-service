@@ -60,7 +60,9 @@ async function getToken(chain) {
             method: 'POST',
             body: tparams,
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-	    agent: httpsAgent
+	}
+	if(config.ar_token.toLowerCase().startsWith("https://")) {
+		options.agent = httpsAgent;
 	}
 	const ar_response = await fetch(config.ar_token, options);
 	const res_body = await ar_response.json();
@@ -136,9 +138,11 @@ async function checkCreateDelegationEvidence(eori, access_token) {
 	headers: {
 	    "Content-Type": "application/json",
 	    "Authorization": "Bearer " + access_token
-	},
-	agent: httpsAgent
+	}
     };
+	if(config.ar_delegation.toLowerCase().startsWith("https://")) {
+		options.agent = httpsAgent;
+	}
     let evidence = null;
     try {
 	debug('Sending delegationRequest to AR');
@@ -206,9 +210,11 @@ async function createPolicy(token, payload) {
 	    "Content-Type": "application/json",
 	    "Authorization": "Bearer " + token,
 	    "Accept": "application/json"
-	},
-	agent: httpsAgent
+	}
     };
+	if(config.ar_policy.toLowerCase().startsWith("https://")) {
+		options.agent = httpsAgent;
+	}
     try {
 	debug('Sending request to AR /policy endpoint with policy: %j', payload);
 	const ar_response = await fetch(config.ar_policy, options);
