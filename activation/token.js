@@ -15,6 +15,7 @@ const httpsAgent = new https.Agent({
 async function forward_token(req, res) {
     debug('Forward request to /token endpoint of AR');
     if ( !req.body.client_id) {
+	debug("Missing parameter client_id");
 	error(400, "Missing parameter client_id", res);
 	return null;
     }
@@ -35,7 +36,7 @@ async function forward_token(req, res) {
 	const ar_response = await fetch(config.ar_token, options);
 	const res_body = await ar_response.json();
 	if (ar_response.status != 200) {
-	    debug('Wrong status ocde in response: %o', res_body);
+	    debug('Wrong status code in response: %o', res_body);
 	    res.status(ar_response.status).send(res_body);
 	    return null;
 	}
