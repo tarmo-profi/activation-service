@@ -4,6 +4,7 @@
   "description": "Service allowing to activate services and create policies in an iSHARE authorisation registry during the acquisition step.",
   "main": "server.js",
   "scripts": {
+    "start": "node --max-http-header-size=${AS_MAX_HEADER_SIZE:-8192} ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dr. Dennis Wendland",
