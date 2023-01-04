@@ -11,6 +11,10 @@ Private key and certificate chain can be also provided as ENVs as given below. I
 * Private key: `AS_CLIENT_KEY`
 * Certificate chain: `AS_CLIENT_CRT`
 
+In case of very large JWTs in the `Authorization` header, one needs to increase the max. HTTP header size 
+of the node server application. This can be done by setting the following ENV (here: max. `32kb`):
+* `AS_MAX_HEADER_SIZE=32768` (Default: 8192)
+
 
 ## Usage
 

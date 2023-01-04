@@ -248,6 +248,11 @@ async function createPolicy(token, payload) {
 async function performCreatePolicy(req, res, db, chain) {
     // Get Autorization header
     debug('Extracting authorization header');
+    if ( !req.header('Authorization')) {
+	debug("Missing Authorization header");
+	error(400, "Missing Authorization header", res);
+	return null;
+    }
     const auth = req.header('Authorization');
     let token = null;
     if (auth.startsWith("Bearer ")){
