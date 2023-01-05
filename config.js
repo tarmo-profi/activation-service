@@ -74,6 +74,9 @@ if (user_cfg.ar) {
 }
 
 // Debug output of config
+if (process.env.AS_MAX_HEADER_SIZE) {
+    debug('Max HTTP header size set to: %s', process.env.AS_MAX_HEADER_SIZE);
+}
 debug('Loaded config: %O', config);
 
 module.exports = config;

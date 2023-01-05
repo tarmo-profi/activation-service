@@ -73,11 +73,16 @@ app.post('/createpolicy', async (req, res) => {
 
     // Return result
     if (presult) {
-	debug('Successfully created new policy at AR. Received policy_token: %o', presult.policy_token);
+	if (presult.policy_token) {
+	    debug('Successfully created new policy at AR. Received policy_token: %o', presult.policy_token);
+	    res.send({
+		policy_token: presult.policy_token
+	    });
+	} else {
+	    debug('Successfully created new policy at AR');
+	    res.sendStatus(200);
+	}
 	debug('==============');
-	res.send({
-	    policy_token: presult.policy_token
-	});
     }
 });
 
