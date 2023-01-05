@@ -47,6 +47,10 @@ async function createJwt(chain) {
 //
 async function getToken(chain) {
     debug('Obtaining token from AR');
+    let result = {
+	access_token: null,
+	err: null
+    };
     const jwtoken = await createJwt(chain);
     let access_token = null;
     try {
@@ -67,21 +71,26 @@ async function getToken(chain) {
 	const ar_response = await fetch(config.ar_token, options);
 	const res_body = await ar_response.json();
 	if (ar_response.status != 200) {
-	    debug('Wrong status code in response: %o', res_body);
-	    return JSON.stringify(res_body);
+	    const err_body = await ar_response.text();
+	    result.err = "Error when retrieving token at AR: " + err_body;
+	    return result;
 	}
 	if ( !res_body.access_token) {
 	    debug('access_token not found in response: %o', res_body);
-	    return "Received invalid response from AR: " + JSON.stringify(res_body);
+	    result.err = "Received invalid response from AR: " + JSON.stringify(res_body);
+	    return result;
 	}
-	return res_body.access_token;
+	result.access_token = res_body.access_token;
+	return result;
     } catch (e) {
 	console.error(e);
 	let msg = "General error when obtaining token from AR";
 	if (e.response) {
 	    msg = msg += ": " + e.response.text();
 	}
-	return msg;
+	debug(msg);
+	result.err = msg;
+	return result;
     }
 }
 
@@ -212,9 +221,9 @@ async function createPolicy(token, payload) {
 	    "Accept": "application/json"
 	}
     };
-	if(config.ar_policy.toLowerCase().startsWith("https://")) {
-		options.agent = httpsAgent;
-	}
+    if(config.ar_policy.toLowerCase().startsWith("https://")) {
+	options.agent = httpsAgent;
+    }
     try {
 	debug('Sending request to AR /policy endpoint with policy: %j', payload);
 	const ar_response = await fetch(config.ar_policy, options);
@@ -225,8 +234,8 @@ async function createPolicy(token, payload) {
 	}
 	const res_body = await ar_response.json();
 	if (!res_body.policy_token) {
-	    debug('Received invalid response: %o', res_body);
-	    result.err = "Received invalid response from AR when creating policy: " + JSON.stringify(res_body);
+	    // Response is not specified, can be empty
+	    debug('No policy token in response: %o', res_body);
 	    return result;
 	}
 	result.policy_token = res_body.policy_token;
@@ -278,7 +287,14 @@ async function performCreatePolicy(req, res, db, chain) {
     }
     
     // Get token from AR
-    const access_token = await getToken(chain);
+    const tresult = await getToken(chain);
+    if (tresult.err) {
+	let msg = "Retrieving token failed: " + tresult.err;
+	debug(msg);
+	error(400, msg, res);
+	return null;
+    }
+    const access_token = tresult.access_token;
 
     // Check for policy at AR, if sender is allowed to create delegation evidence
     const err = await checkCreateDelegationEvidence(db_token.token.eori, access_token);
