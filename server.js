@@ -79,6 +79,7 @@ app.post('/createpolicy', async (req, res) => {
 		policy_token: presult.policy_token
 	    });
 	} else {
+	    debug('Successfully created new policy at AR');
 	    res.sendStatus(200);
 	}
 	debug('==============');
